@@ -23,6 +23,6 @@ extension HomeViewModel: HomeViewModelLogic {
     }
 
     func viewDidLoad() {
-        display?.displayState(.empty)
+        display?.displayState(.hasData("teste"))
     }
 }

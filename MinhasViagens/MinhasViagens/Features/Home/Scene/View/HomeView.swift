@@ -21,6 +21,14 @@ final class HomeView: UIView {
         case hasData(String)
         case empty
     }
+    
+    private lazy var tableView: UITableView = {
+        let table = UITableView()
+        table.delegate = self
+        table.dataSource = self
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -52,8 +60,6 @@ final class HomeView: UIView {
 
     init() {
         super.init(frame: .zero)
-        buildViewHierarchy()
-        setupConstraints()
         additionalSetup()
     }
 
@@ -61,15 +67,39 @@ final class HomeView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    private func buildViewHierarchy() {
-        addSubview(stackView)
+    
+    private func setupEmptyView(){
+        buildEmptyViewHierarchy()
+        setupConstraintsEmptyView()
+    }
+    
+    private func setupDataView(){
+        buildDataViewHierarchy()
+        setupConstraintsDataView()
     }
 
-    private func setupConstraints() {
+    private func buildEmptyViewHierarchy() {
+        addSubview(stackView)
+    }
+    
+    private func buildDataViewHierarchy() {
+        addSubview(tableView)
+    }
+
+
+    private func setupConstraintsEmptyView() {
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+    
+    private func setupConstraintsDataView() {
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 
@@ -86,9 +116,24 @@ extension HomeView: HomeViewProtocol {
     func changeState(_ state: State) {
         switch state {
         case .hasData(let data):
-            textLabel.text = data
+            setupDataView()
         case .empty:
-            textLabel.text = "Não há nada aqui!"
+            setupEmptyView()
         }
     }
 }
+
+extension HomeView: UITableViewDelegate {}
+
+extension HomeView: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    
+}
+
