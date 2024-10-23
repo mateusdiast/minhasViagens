@@ -26,7 +26,9 @@ final class HomeView: UIView {
         let table = UITableView()
         table.delegate = self
         table.dataSource = self
+        table.separatorStyle = .none
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.register(MyTravelsTableViewCell.self, forCellReuseIdentifier: MyTravelsTableViewCell.identifier)
         return table
     }()
 
@@ -127,13 +129,27 @@ extension HomeView: UITableViewDelegate {}
 
 extension HomeView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MyTravelsTableViewCell.identifier) as? MyTravelsTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        let data = DataTravelsCell(departure: "Belo Horizonte", arrival: "Fortaleza")
+        
+        cell.setupData(data: data)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
     
     
 }
+
+
 
